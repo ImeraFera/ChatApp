@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on('disconnect', () => {
+    socket.on('logout', () => {
 
         console.log('Bir kullanıcı ayrıldı', socket.id);
 

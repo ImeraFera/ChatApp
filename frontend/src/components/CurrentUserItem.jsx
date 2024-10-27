@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { acceptInvite, getInvites, logoutUser } from '../redux/slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { socket } from '../socket';
 
 function CurrentUserItem(props) {
     const { user, invites } = props;
@@ -17,7 +18,7 @@ function CurrentUserItem(props) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
     const open = Boolean(anchorEl);
-
+    console.log(user)
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -30,6 +31,7 @@ function CurrentUserItem(props) {
         handleClose();
         try {
             await dispatch(logoutUser()).unwrap();
+            socket.emit('logout');
             toast.success('Çıkış Yapıldı!', {
                 autoClose: 1500,
             });

@@ -8,10 +8,14 @@ import SendIcon from '@mui/icons-material/Send';
 import { useFormik } from 'formik'
 import AddIcon from '@mui/icons-material/Add';
 import MessageItem from '../components/MessageItem'
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserFriends } from '../redux/slices/userSlice'
 import { roomNameGenerator } from '../utils/roomNameGenerator';
 import { socket } from '../socket'
+import EmojiPicker, { Emoji } from 'emoji-picker-react'
+
+
 import { sendInvite } from '../redux/slices/userSlice'
 import { toast } from 'react-toastify'
 import { getInvites } from '../redux/slices/userSlice'
@@ -54,7 +58,7 @@ function Home() {
     const [messages, setmessages] = useState([]);
     const [message, setmessage] = useState({});
     const [roomName, setroomName] = useState(null);
-
+    const [openEmojiPicker, setopenEmojiPicker] = useState(false);
     const [onlineUsers, setonlineUsers] = useState([]);
     const dispatch = useDispatch();
 
@@ -336,6 +340,24 @@ function Home() {
                                     onChange={(e) => setmessage({ ...message, content: e.target.value })}
                                     fullWidth
                                 />
+                                <IconButton
+                                    onClick={() => setopenEmojiPicker(!openEmojiPicker)}
+                                >
+                                    <EmojiEmotionsIcon sx={{ color: 'white' }}></EmojiEmotionsIcon>
+                                </IconButton>
+                                {openEmojiPicker && (
+                                    <Dialog open={openEmojiPicker} onClose={() => setopenEmojiPicker(false)}>
+                                        <EmojiPicker
+                                            theme="dark"
+                                            onEmojiClick={(e) =>
+                                                setmessage((prevMessage) => ({
+                                                    ...prevMessage,
+                                                    content: prevMessage.content ? prevMessage.content + e.emoji : e.emoji,
+                                                }))
+                                            }
+                                        />
+                                    </Dialog>
+                                )}
                                 <IconButton
                                     onClick={sendMessage}
                                 >
